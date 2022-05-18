@@ -46,7 +46,7 @@ const Login = () => {
   return (
     <div className='w-full flex min-h-screen items-center justify-center'>
       <div className='shadow-md p-3 border rounded-md flex flex-col items-center'>
-        <div className='flex flex-col w-3/4 my-2 gap-5'>
+        <div className='flex flex-col my-2 gap-5'>
           <span className='text-4xl tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-blue-600'>
             {t('login.header')}
           </span>
@@ -84,12 +84,6 @@ const Login = () => {
           >
             {t('login.prompt')}
           </span>
-          <button
-            className='border rounded-sm border-slate-500 p-3 uppercase cursor-pointer'
-            onClick={() => fillDebug()}
-          >
-            FillDebug
-          </button>
         </div>
       </div>
     </div>

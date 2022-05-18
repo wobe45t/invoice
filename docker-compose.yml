@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  mongodb:
+    image: mongo
+    container_name: invoice-mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ~/mongodb/database:/data/db
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+  backend:
+    container_name: invoice-backend
+    build:
+      context: ./
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      JWT_SECRET: ${JWT_SECRET}
+
+  frontend:
+    container_name: invoice-frontend
+    build:
+      context: ./frontend
+    ports:
+      - '3000:3000'
+

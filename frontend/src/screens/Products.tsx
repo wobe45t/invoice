@@ -23,10 +23,10 @@ const Products = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('products')
-        toast.success(t('products.delete.success'), { autoClose: 1000 })
+        toast.success(t('products.alerts.delete.success'), { autoClose: 1000 })
       },
       onError: () => {
-        toast.error(t('products.delete.error'), { autoClose: 1000 })
+        toast.error(t('products.alerts.delete.error'), { autoClose: 1000 })
       },
     }
   )

@@ -220,7 +220,7 @@ export const resources = {
             error: "Couldn't update contractor",
           },
         },
-        error: {
+        errors: {
           nipLength: 'NIP length has to be equal to 10',
           nipDigit: 'NIP has to be digit only',
         },
@@ -305,7 +305,7 @@ export const resources = {
         add: 'Dodaj nowy produkt',
         search: 'Szukaj produktu',
         alerts: {
-          notFound: 'Nie znaleziono produktu',
+          notFound: 'Nie znaleziono produktów',
           delete: {
             success: 'Produkt usunięty',
             error: 'Usunięcie produktu nie powiodło się',
@@ -461,7 +461,7 @@ export const resources = {
             error: 'Nie udało się zaktualizować kontahenta',
           },
         },
-        error: {
+        errors: {
           nipLength: 'Długość NIP musi być równa 10',
           nipDigit: 'NIP musi składać się tylko z cyfer',
         },

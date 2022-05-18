@@ -4,7 +4,9 @@ const User = require('../models/userModel')
 
 const protect = asyncHandler(async (req, res, next) => {
   let token
-
+  if(!process.env.JWT_SECRET) {
+    throw new Error('No JWT_SECRET provided')
+  }
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')

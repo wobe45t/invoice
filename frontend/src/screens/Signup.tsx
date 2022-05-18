@@ -24,7 +24,7 @@ const Signup = () => {
     (signupData: Credentials) => signup(signupData),
     {
       onSuccess: (data) => {
-        toast.success(t('signup.alert.success'), {
+        toast.success(t('signup.alerts.success'), {
           autoClose: 1000,
           hideProgressBar: true,
         })
@@ -39,7 +39,7 @@ const Signup = () => {
   return (
     <div className='w-full flex min-h-screen items-center justify-center'>
       <div className='shadow-md p-3 border rounded-md flex flex-col items-center'>
-        <div className='flex flex-col w-3/4 my-2 gap-5'>
+        <div className='flex flex-col my-2 gap-5'>
           <span className='text-4xl tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-blue-600'>
             {t('signup.header')}
           </span>
