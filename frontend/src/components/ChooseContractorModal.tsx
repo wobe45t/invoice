@@ -5,6 +5,7 @@ import { getContractors } from '../actions/contractor'
 import { SearchInput } from '../components/SearchInput'
 import {usePagination, PageIndicator} from './pagination'
 import {PageHeader} from '../components/styled/Header'
+import {useTranslation} from 'react-i18next'
 
 interface Props {
   show: boolean
@@ -16,12 +17,13 @@ export const ChooseContractorModal = (props: Props) => {
   const { data: contractors } = useQuery('contractors', getContractors)
   const {search, controls, page} = usePagination(5, contractors)
 
+  const {t} = useTranslation()
 
   return (
     <Modal show={show} setShow={setShow}>
-      <PageHeader>Choose contractor</PageHeader>
+      <PageHeader>{t('contractorModal.header')}</PageHeader>
       <SearchInput
-        label='Search contarctor'
+        label={t('contractorModal.search')}
         value={search.filter}
         name='filter'
         onChange={(e) => search.setFilter(e.target.value)}

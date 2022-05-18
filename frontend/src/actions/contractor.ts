@@ -4,7 +4,6 @@ import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil'
 import { userAtom } from '../state/userState'
 import { contractorsAtom } from '../state/contractorState'
 import axios from 'axios'
-import { contractors } from '../constants'
 
 export const useGetContractors = () => {
   const user = useRecoilValue(userAtom)

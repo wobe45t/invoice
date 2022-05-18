@@ -1,13 +1,9 @@
 const pdfMake = require('pdfmake/build/pdfmake')
 const pdfFonts = require('pdfmake/build/vfs_fonts')
-// import { save } from '@tauri-apps/api/dialog'
-// import { invoke } from '@tauri-apps/api/tauri'
-// import { homeDir } from '@tauri-apps/api/path'
-// import {IInvoice, IInvoiceProduct} from '../interfaces'
-
 pdfMake.vfs = pdfFonts.pdfMake.vfs
-
 const fillColor = '#d0d2d6'
+
+
 
 const format = (number) => {
   return Number(number).toLocaleString("pl-PL", {minimumFractionDigits: 2})
@@ -24,7 +20,6 @@ const partyHeader = (text) => {
     },
   ]
 }
-
 const partyRow = (text) => {
   return [
     {
@@ -34,7 +29,6 @@ const partyRow = (text) => {
     },
   ]
 }
-
 const productTableHeaders = () => {
   const headers = [
     'Nr.',
@@ -57,7 +51,6 @@ const productTableHeaders = () => {
 
   return [...headers.map((header) => tableHeader(header))]
 }
-
 
 const productTableRow = (id, product) => {
   const netValue = product.quantity * product.price
@@ -309,8 +302,6 @@ const generatePdf = (invoice) => {
     },
   }
   const pdf = pdfMake.createPdf(docDefinition)
-
-
   return pdf
 }
 

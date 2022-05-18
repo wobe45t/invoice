@@ -6,11 +6,11 @@ const Home = () => {
   const navigate = useNavigate()
   const { user } = useContext(UserContext)
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login')
-    }
-  }, [navigate, user])
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate('/login')
+  //   }
+  // }, [navigate, user])
 
   return (
     <div className='container mx-auto'>

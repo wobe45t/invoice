@@ -41,7 +41,7 @@ export const SelectField = React.forwardRef(
         <label className='flex flex-col gap-1 tracking-tight font-light'>
           {label}
           <select
-            className={`border p-2 rounded-md ${error && 'border-red-500'}`}
+            className={`border p-2 rounded-md bg-gray-200 ${error && 'border-red-500'}`}
             ref={ref}
             {...inputProps}
           >

@@ -12,7 +12,7 @@ export const TextField = (props: {
       name={props.name}
       value={props.value}
       placeholder={props.placeholder}
-      className='w-full p-1 border border-slate-200'
+      className='w-full p-1 border border-slate-200 text-gray-700 placeholder:font-light placeholder:tracking-tighter'
       onChange={props.onChange}
     />
   )

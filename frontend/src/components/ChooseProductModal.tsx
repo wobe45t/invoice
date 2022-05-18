@@ -8,6 +8,7 @@ import { IProduct } from '../interfaces'
 import { useNavigate } from 'react-router'
 import { PageHeader } from '../components/styled/Header'
 import { Cell, HeaderCell } from '../components/styled/Table'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   show: boolean
@@ -19,12 +20,13 @@ export const ChooseProductModal = (props: Props) => {
   const { data: products } = useQuery('products', getProducts)
   const { search, controls, page } = usePagination(5, products)
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   return (
     <Modal show={show} setShow={setShow}>
-      <PageHeader>Choose product</PageHeader>
+      <PageHeader>{t('productModal.header')}</PageHeader>
       <SearchInput
-        label='Search product'
+        label={t('productModal.search')}
         value={search.filter}
         name='filter'
         onChange={(e) => search.setFilter(e.target.value)}
@@ -33,12 +35,12 @@ export const ChooseProductModal = (props: Props) => {
         {page.length === 0 ? (
           <>
             <h1 className='tracking-tighter font-ligth text-lg'>
-              Products not found.{' '}
+              {t('productModal.notFound')}
               <span
                 className='text-blue-900 cursor-pointer'
                 onClick={() => navigate('/add-product')}
               >
-                Add products here
+                {t('productModal.add')}
               </span>
             </h1>
           </>

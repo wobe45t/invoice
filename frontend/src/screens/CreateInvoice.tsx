@@ -1,8 +1,6 @@
 import { useState, useContext, useCallback, useEffect } from 'react'
 import { Button, MyModal as Modal, TextField } from '../components'
-import { userAtom } from '../state/userState'
 import { IInvoice, IInvoiceProduct } from '../interfaces'
-import { useRecoilValue } from 'recoil'
 import { useNavigate, useLocation } from 'react-router'
 import '../styles/CreateInvoice.styles.css'
 import { InputField } from '../components/InputField'
@@ -12,15 +10,15 @@ import tw from 'twin.macro'
 import { useForm } from 'react-hook-form'
 import { IProduct } from '../interfaces'
 import { toast } from 'react-toastify'
-import { useMutation, QueryCache, useQuery } from 'react-query'
-import { getContractors } from '../actions/contractor'
-import { getProducts } from '../actions/products'
+import { useMutation } from 'react-query'
 import { addInvoice, updateInvoice } from '../actions/invoice'
 import { HeaderCell, Cell } from '../components/styled/Table'
 import { TrashIcon } from '../components/styled/Icon'
 import { UserContext } from '../context/userContext'
 import { ChooseContractorModal } from '../components/ChooseContractorModal'
 import { ChooseProductModal } from '../components/ChooseProductModal'
+import { useTranslation } from 'react-i18next'
+import { table } from 'console'
 
 const Span = tw.span`tracking-tight font-light`
 
@@ -38,7 +36,7 @@ const ProductRow = (props: any) => {
     tax: product.tax,
     unit: product.unit,
   })
-
+  const { t } = useTranslation()
   const { price, quantity, tax, unit } = productData
 
   const onChange = (e: any) => {
@@ -55,7 +53,7 @@ const ProductRow = (props: any) => {
       <Cell data-label='Name'>{product.name}</Cell>
       <Cell data-label='Price'>
         <TextField
-          placeholder='price'
+          placeholder={t('createInvoice.pages.products.table.name')}
           name='price'
           value={price}
           onChange={onChange}
@@ -64,7 +62,7 @@ const ProductRow = (props: any) => {
 
       <Cell data-label='Quantity'>
         <TextField
-          placeholder='quantity'
+          placeholder={t('createInvoice.pages.products.table.quantity')}
           name='quantity'
           value={quantity}
           onChange={onChange}
@@ -73,7 +71,7 @@ const ProductRow = (props: any) => {
 
       <Cell data-label='Tax'>
         <TextField
-          placeholder='tax'
+          placeholder={t('createInvoice.products.table.tax')}
           name='tax'
           value={tax}
           onChange={onChange}
@@ -82,7 +80,7 @@ const ProductRow = (props: any) => {
 
       <Cell data-label='Unit'>
         <TextField
-          placeholder='unit'
+          placeholder={t('createInvoice.products.table.unit')}
           name='unit'
           value={unit}
           onChange={onChange}
@@ -111,17 +109,33 @@ const CreateInvoice = () => {
   const [showProductModal, setShowProductModal] = useState<boolean>(false)
   const [edit, setEdit] = useState<boolean>(false)
 
-  const {
-    mutate: addInvoiceMutate,
-    isSuccess: addSuccess,
-    isError: addError,
-  } = useMutation((invoiceData: IInvoice) => addInvoice(invoiceData))
+  const { t } = useTranslation()
 
-  const {
-    mutate: updateInvoiceMutate,
-    isSuccess: updateSuccess,
-    isError: updateError,
-  } = useMutation((invoiceData: IInvoice) => updateInvoice(invoiceData))
+  const { mutate: addInvoiceMutate } = useMutation(
+    (invoiceData: IInvoice) => addInvoice(invoiceData),
+    {
+      onSuccess: () => {
+        toast.success(t('add.success'), { autoClose: 1000 })
+        navigate('/invoices')
+      },
+      onError: () => {
+        toast.error(t('add.error'), { autoClose: 1000 })
+      },
+    }
+  )
+
+  const { mutate: updateInvoiceMutate } = useMutation(
+    (invoiceData: IInvoice) => updateInvoice(invoiceData),
+    {
+      onSuccess: () => {
+        toast.success(t('update.success'), { autoClose: 1000 })
+        navigate('/invoices')
+      },
+      onError: () => {
+        toast.error('update.error', { autoClose: 1000 })
+      },
+    }
+  )
 
   const {
     register: registerInvoiceForm,
@@ -198,7 +212,6 @@ const CreateInvoice = () => {
     const canAdd = invoiceProducts
       .map((product: IProduct) => product._id)
       .includes(product._id)
-    console.log('can Add ', canAdd)
     if (!canAdd) {
       setInvoiceProducts((prevState) => [
         ...prevState,
@@ -209,7 +222,7 @@ const CreateInvoice = () => {
       ])
       setShowProductModal(false)
     } else {
-      toast.warning('Product already added', { autoClose: 1000 })
+      toast.warning(t('createInvoice.addProductError'), { autoClose: 1000 })
     }
   }
 
@@ -261,56 +274,33 @@ const CreateInvoice = () => {
     }
   }, [state])
 
-  useEffect(() => {
-    if (addSuccess) {
-      toast.success('Invoice created', { autoClose: 1000 })
-    }
-    if (updateSuccess) {
-      toast.success('Invoice updated', { autoClose: 1000 })
-    }
-    if (addSuccess || updateSuccess) {
-      navigate('/invoices')
-    }
-  }, [addSuccess, updateSuccess, navigate])
-
-  useEffect(() => {
-    if (addError) {
-      toast.error('Couldnt create invoice', { autoClose: 1000 })
-    }
-    if (updateError) {
-      toast.error('Couldnt update invoice', { autoClose: 1000 })
-    }
-    if (addError || updateError) {
-      navigate('/invoices')
-    }
-  }, [addError, updateError, navigate])
-
   const [page, setPage] = useState<number>(1)
   const [pageDescription, setPageDescription] = useState<string>('test')
 
   useEffect(() => {
     switch (page) {
       case 1:
-        setPageDescription('Overall invoice data')
+        setPageDescription(t('createInvoice.pages.general.header'))
         break
       case 2:
-        setPageDescription('Contractor')
+        setPageDescription(t('createInvoice.pages.contractor.header'))
         break
       case 3:
-        setPageDescription('Products')
+        setPageDescription(t('createInvoice.pages.products.header'))
         break
       case 4:
-        setPageDescription('Invoice summary')
+        setPageDescription(t('createInvoice.pages.summary.header'))
         break
     }
-  }, [page])
+  }, [page, t])
 
   return (
     <div className='container mx-auto'>
-      <Button onClick={() => fillDebug()}>Fill debug</Button>
       <div className='w-full flex flex-col'>
         <div className='flex flex-col my-2'>
-          <span className='text-2xl'>Step {page}</span>
+          <span className='text-2xl'>
+            {t('createInvoice.step')} {page}
+          </span>
           <span className='text-2xl font-thin'>{pageDescription}</span>
           <div className='border-2 border-gray-500' />
         </div>
@@ -322,54 +312,54 @@ const CreateInvoice = () => {
               setPage(2)
             })}
           >
-            <Fieldset label='Invoice data'>
+            <Fieldset label={t('createInvoice.pages.general.fieldset')}>
               <InputField
-                label='Invoice name'
+                label={t('createInvoice.pages.general.fields.name')}
                 {...registerInvoiceForm('name', {
-                  required: 'Field is required',
+                  required: t('required'),
                 })}
                 error={errorsInvoiceForm?.name}
               />
               <InputField
-                label='Payment type'
+                label={t('createInvoice.pages.general.fields.paymentType')}
                 {...registerInvoiceForm('paymentType', {
-                  required: 'Field is required',
+                  required: t('required'),
                 })}
                 error={errorsInvoiceForm?.paymentType}
               />
               <InputField
-                label='Payment due'
+                label={t('createInvoice.pages.general.fields.paymentDue')}
                 type='date'
                 {...registerInvoiceForm('paymentDue', {
-                  required: 'Field is required',
+                  required: t('required'),
                 })}
                 error={errorsInvoiceForm?.paymentDue}
               />
               <InputField
-                label='Issue place'
+                label={t('createInvoice.pages.general.fields.issuePlace')}
                 {...registerInvoiceForm('issuePlace', {
-                  required: 'Field is required',
+                  required: t('required'),
                 })}
                 error={errorsInvoiceForm?.issuePlace}
               />
               <InputField
-                label='Issue date'
+                label={t('createInvoice.pages.general.fields.issueDate')}
                 type='date'
                 {...registerInvoiceForm('issueDate', {
-                  required: 'Field is required',
+                  required: t('required'),
                 })}
                 error={errorsInvoiceForm?.issueDate}
               />
               <InputField
-                label='Sell date'
+                label={t('createInvoice.pages.general.fields.sellDate')}
                 type='date'
                 {...registerInvoiceForm('sellDate', {
-                  required: 'Field is required',
+                  required: t('required'),
                 })}
                 error={errorsInvoiceForm?.sellDate}
               />
               <ButtonWrapper>
-                <SubmitButton>Next</SubmitButton>
+                <SubmitButton>{t('createInvoice.next')}</SubmitButton>
               </ButtonWrapper>
             </Fieldset>
           </form>
@@ -378,7 +368,6 @@ const CreateInvoice = () => {
         {page === 2 && (
           <form
             onSubmit={handleSubmitContractorForm((data) => {
-              console.log('current submit: ', data)
               setInvoiceForm((prevState: any) => ({
                 ...prevState,
                 contractor: data,
@@ -386,85 +375,93 @@ const CreateInvoice = () => {
               setPage(3)
             })}
           >
-            <Fieldset label='Contractor'>
+            <Fieldset label={t('createInvoice.pages.contractor.fieldset')}>
               <div className='flex flex-col md:flex-row gap-1 md:gap-5'>
                 <div className='w-full'>
                   <InputField
-                    label='Name'
+                    label={t('createInvoice.pages.contractor.fields.name')}
                     {...registerContractorForm('name', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.name}
                   />
                   <InputField
-                    label='Surname'
+                    label={t('createInvoice.pages.contractor.fields.surname')}
                     {...registerContractorForm('surname', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.surname}
                   />
                   <InputField
-                    label='Entity name'
+                    label={t(
+                      'createInvoice.pages.contractor.fields.entityName'
+                    )}
                     {...registerContractorForm('entityName', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.entityName}
                   />
                   <InputField
-                    label='NIP'
+                    label={t('createInvoice.pages.contractor.fields.nip')}
                     {...registerContractorForm('nip', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.nip}
                   />
                 </div>
                 <div className='w-full'>
                   <InputField
-                    label='Street'
+                    label={t('createInvoice.pages.contractor.fields.street')}
                     {...registerContractorForm('street', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.street}
                   />
                   <InputField
-                    label='Postal code'
+                    label={t(
+                      'createInvoice.pages.contractor.fields.postalCode'
+                    )}
                     {...registerContractorForm('postalCode', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.postalCode}
                   />
                   <InputField
-                    label='City'
+                    label={t('createInvoice.pages.contractor.fields.city')}
                     {...registerContractorForm('city', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.city}
                   />
                   <InputField
-                    label='Phone number'
+                    label={t(
+                      'createInvoice.pages.contractor.fields.phoneNumber'
+                    )}
                     {...registerContractorForm('phoneNumber', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.phoneNumber}
                   />
                   <InputField
-                    label='Email'
+                    label={t('createInvoice.pages.contractor.fields.email')}
                     {...registerContractorForm('email', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.email}
                   />
                   <InputField
-                    label='Bank account number'
+                    label={t(
+                      'createInvoice.pages.contractor.fields.bankAccountNumber'
+                    )}
                     {...registerContractorForm('bankAccountNumber', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.bankAccountNumber}
                   />
                   <InputField
-                    label='Bank name'
+                    label={t('createInvoice.pages.contractor.fields.bankName')}
                     {...registerContractorForm('bankName', {
-                      required: 'Field is required',
+                      required: t('required'),
                     })}
                     error={errorsContractorForm?.bankName}
                   />
@@ -476,29 +473,14 @@ const CreateInvoice = () => {
                 className='font-light text-xl cursor-pointer text-blue-900 hover:text-blue-700'
                 onClick={handleAddContractor}
               >
-                Select contractor
+                {t('createInvoice.pages.contractor.select')}
               </Span>
             </div>
-            {getFieldStateContractorForm('name').isDirty && (
-              <div className='block border border-slate-200 p-2'>
-                <div className='flex flex-col'>
-                  <span className='text-lg font-thin'>Contractor</span>
-                  <span className='text-xl font-thiner'>
-                    {/* {contractorData?.entityName} */}
-                  </span>
-                </div>
-                <div
-                  className='text-slate-400 cursor-pointer'
-                  onClick={() => setEditContractor(!editContractor)}
-                >
-                  Edit contractor data
-                </div>
-              </div>
-            )}
-
             <ButtonWrapper>
-              <Button onClick={() => setPage(1)}>Previous</Button>
-              <SubmitButton>Next</SubmitButton>
+              <Button onClick={() => setPage(1)}>
+                {t('createInvoice.previous')}
+              </Button>
+              <SubmitButton>{t('createInvoice.next')}</SubmitButton>
             </ButtonWrapper>
           </form>
         )}
@@ -506,7 +488,9 @@ const CreateInvoice = () => {
         {page === 3 && (
           <>
             <div className='self-end my-2'>
-              <Button onClick={handleAddProduct}>Add product</Button>
+              <Button onClick={handleAddProduct}>
+                {t('createInvoice.pages.products.add')}
+              </Button>
             </div>
 
             {invoiceProducts.length === 0 ? (
@@ -514,20 +498,32 @@ const CreateInvoice = () => {
                 className='my-3 text-blue-900 text-xl text-center'
                 onClick={() => {}}
               >
-                Add products to your invoice
+                {t('createInvoice.pages.products.prompt')}
               </div>
             ) : (
               <>
                 {/* BIG SCREEN */}
-                <table className='hidden md:table rounded-md'>
+                <table className='rounded-md'>
                   <thead className='rounded-md'>
                     <tr>
-                      <HeaderCell>Name</HeaderCell>
-                      <HeaderCell>Price</HeaderCell>
-                      <HeaderCell>Quantity</HeaderCell>
-                      <HeaderCell>Tax</HeaderCell>
-                      <HeaderCell>Unit</HeaderCell>
-                      <HeaderCell>Net sum</HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.name')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.price')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.quantity')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.tax')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.unit')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.netSum')}
+                      </HeaderCell>
                     </tr>
                   </thead>
                   <tbody>
@@ -543,50 +539,69 @@ const CreateInvoice = () => {
                   </tbody>
                 </table>
                 {/* SMALL SCREEN */}
-                <div className='flex flex-col gap-2 md:hidden'>
+                {/* <div className='flex flex-col gap-2 md:hidden'>
                   {invoiceProducts.map((product: IProduct) => (
                     <div key={product._id}>{product.name}</div>
                   ))}
-                </div>
+                </div> */}
 
-                <div className='flex flex-col w-1/5 self-end border p-2 my-2 border-slate-200'>
-                  <div className='flex flex-row justify-between'>
-                    <div>Net value</div>
+                <div className='flex flex-col self-end border p-2 my-2 border-slate-200'>
+                  <div className='flex flex-row gap-3 justify-between'>
+                    <div>
+                      {t('createInvoice.pages.products.table.summary.netValue')}
+                    </div>
                     <div>{invoiceSummary.netSum.toFixed(2)} PLN</div>
                   </div>
-                  <div className='flex flex-row justify-between'>
-                    <div>Gross value</div>
+                  <div className='flex flex-row gap-3 justify-between'>
+                    <div>
+                      {t(
+                        'createInvoice.pages.products.table.summary.grossValue'
+                      )}
+                    </div>
                     <div>{invoiceSummary.grossSum.toFixed(2)} PLN</div>
                   </div>
-                  <div className='flex flex-row justify-between'>
-                    <div>Tax value</div>
+                  <div className='flex flex-row gap-3 justify-between'>
+                    <div>
+                      {t('createInvoice.pages.products.table.summary.taxValue')}
+                    </div>
                     <div>{invoiceSummary.taxSum.toFixed(2)} PLN</div>
                   </div>
                 </div>
               </>
             )}
             <ButtonWrapper>
-              <Button onClick={() => setPage(2)}>Previous</Button>
+              <Button onClick={() => setPage(2)}>
+                {t('createInvoice.previous')}
+              </Button>
               <Button
                 onClick={() => {
-                  const invalid = invoiceProducts.some(
-                    (product: IInvoiceProduct) => {
-                      return Object.values(product).includes('')
-                    }
-                  )
-                  console.log(invalid)
-                  if (!invalid) {
-                    setInvoiceForm((prevState: any) => ({
-                      ...prevState,
-                      products: invoiceProducts,
-                    }))
-                    setPage(4)
-                  } else {
-                    toast.warning('Each field must be filled')
+                  if (invoiceProducts.length === 0) {
+                    toast.warning(
+                      t('createInvoice.pages.products.alerts.noProductsAdded'),
+                      { autoClose: 1000 }
+                    )
+                    return
                   }
+                  if (
+                    invoiceProducts.some((product: IInvoiceProduct) => {
+                      return Object.values(product).includes('')
+                    })
+                  ) {
+                    toast.warning(
+                      t('createInvoice.pages.products.alerts.fillFields'),
+                      { autoClose: 1000 }
+                    )
+                    return
+                  }
+
+                  setInvoiceForm((prevState: any) => ({
+                    ...prevState,
+                    products: invoiceProducts,
+                  }))
+                  setPage(4)
                 }}
               >
-                Next
+                {t('createInvoice.next')}
               </Button>
             </ButtonWrapper>
           </>
@@ -596,15 +611,27 @@ const CreateInvoice = () => {
           <>
             <div className='grid grid-cols-2 gap-2 my-2'>
               <div className='border rounded-md'>
-                <div className='bg-gray-100 p-1'>Invoice data</div>
+                <div className='bg-gray-100 p-1'>
+                  {t('createInvoice.pages.summary.fieldsets.general')}
+                </div>
                 <div className='p-2 flex flex-row gap-5 '>
                   <div className='flex flex-col'>
-                    <Span>Name:</Span>
-                    <Span>Issue date:</Span>
-                    <Span>Sell date:</Span>
-                    <Span>Issue place:</Span>
-                    <Span>Payment due:</Span>
-                    <Span>Payment type:</Span>
+                    <Span>{t('createInvoice.pages.general.fields.name')}</Span>
+                    <Span>
+                      {t('createInvoice.pages.general.fields.issueDate')}
+                    </Span>
+                    <Span>
+                      {t('createInvoice.pages.general.fields.sellDate')}
+                    </Span>
+                    <Span>
+                      {t('createInvoice.pages.general.fields.issuePlace')}
+                    </Span>
+                    <Span>
+                      {t('createInvoice.pages.general.fields.paymentDue')}
+                    </Span>
+                    <Span>
+                      {t('createInvoice.pages.general.fields.paymentType')}
+                    </Span>
                   </div>
                   <div className='flex flex-col'>
                     <Span>{invoiceForm.name}</Span>
@@ -617,13 +644,19 @@ const CreateInvoice = () => {
                 </div>
               </div>
               <div className='border rounded-md'>
-                <div className='bg-gray-100 p-1'>Contractor</div>
+                <div className='bg-gray-100 p-1'>
+                  {t('createInvoice.pages.summary.fieldsets.contractor')}
+                </div>
                 <div className='p-2 flex flex-row gap-5 '>
                   <div className='flex flex-col'>
-                    <Span>Name</Span>
-                    <Span>NIP</Span>
-                    <Span>Address</Span>
-                    <Span>Contact</Span>
+                    <Span>{t('createInvoice.pages.summary.fields.name')}</Span>
+                    <Span>{t('createInvoice.pages.summary.fields.nip')}</Span>
+                    <Span>
+                      {t('createInvoice.pages.summary.fields.address')}
+                    </Span>
+                    <Span>
+                      {t('createInvoice.pages.summary.fields.contact')}
+                    </Span>
                   </div>
                   <div className='flex flex-col'>
                     <Span>{invoiceForm.contractor.entityName}</Span>
@@ -641,13 +674,19 @@ const CreateInvoice = () => {
                 </div>
               </div>
               <div className='border rounded-md'>
-                <div className='bg-gray-100 p-1'>Profile</div>
+                <div className='bg-gray-100 p-1'>
+                  {t('createInvoice.pages.summary.fieldsets.profile')}
+                </div>
                 <div className='p-2 flex flex-row gap-5 '>
                   <div className='flex flex-col'>
-                    <Span>Name</Span>
-                    <Span>NIP</Span>
-                    <Span>Address</Span>
-                    <Span>Contact</Span>
+                    <Span>{t('createInvoice.pages.summary.fields.name')}</Span>
+                    <Span>{t('createInvoice.pages.summary.fields.nip')}</Span>
+                    <Span>
+                      {t('createInvoice.pages.summary.fields.address')}
+                    </Span>
+                    <Span>
+                      {t('createInvoice.pages.summary.fields.contact')}
+                    </Span>
                   </div>
                   <div className='flex flex-col'>
                     <Span>{user.profile?.entityName}</Span>
@@ -666,14 +705,24 @@ const CreateInvoice = () => {
             {invoiceProducts.length !== 0 && (
               <>
                 {/* BIG SCREEN */}
-                <table className='hidden md:table rounded-md'>
+                <table className='rounded-md'>
                   <thead className='rounded-md bg-gray-100'>
                     <tr>
-                      <HeaderCell>Name</HeaderCell>
-                      <HeaderCell>Price</HeaderCell>
-                      <HeaderCell>Quantity</HeaderCell>
-                      <HeaderCell>Tax</HeaderCell>
-                      <HeaderCell>Unit</HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.name')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.price')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.quantity')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.unit')}
+                      </HeaderCell>
+                      <HeaderCell>
+                        {t('createInvoice.pages.products.table.tax')}
+                      </HeaderCell>
                     </tr>
                   </thead>
                   <tbody>
@@ -683,38 +732,44 @@ const CreateInvoice = () => {
                         <Cell>{product.price}</Cell>
                         <Cell>{product.quantity}</Cell>
                         <Cell>{product.unit}</Cell>
-                        <Cell>{product.tax}</Cell>
+                        <Cell>{product.tax * 100}%</Cell>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                {/* SMALL SCREEN */}
-                <div className='flex flex-col gap-2 md:hidden'>
-                  {invoiceProducts.map((product: IProduct) => (
-                    <div>{product.name}</div>
-                  ))}
-                </div>
 
-                <div className='flex flex-col w-1/5 self-end border p-2 my-2 border-slate-200'>
-                  <div className='flex flex-row justify-between'>
-                    <div>Net value</div>
+                <div className='flex flex-col self-end border p-2 my-2 border-slate-200'>
+                  <div className='flex flex-row gap-3 justify-between'>
+                    <div>
+                      {t('createInvoice.pages.products.table.summary.netValue')}
+                    </div>
                     <div>{invoiceSummary.netSum.toFixed(2)} PLN</div>
                   </div>
-                  <div className='flex flex-row justify-between'>
-                    <div>Gross value</div>
+                  <div className='flex flex-row gap-3 justify-between'>
+                    <div>
+                      {t(
+                        'createInvoice.pages.products.table.summary.grossValue'
+                      )}
+                    </div>
                     <div>{invoiceSummary.grossSum.toFixed(2)} PLN</div>
                   </div>
-                  <div className='flex flex-row justify-between'>
-                    <div>Tax value</div>
+                  <div className='flex flex-row gap-3 justify-between'>
+                    <div>
+                      {t('createInvoice.pages.products.table.summary.taxValue')}
+                    </div>
                     <div>{invoiceSummary.taxSum.toFixed(2)} PLN</div>
                   </div>
                 </div>
               </>
             )}
             <ButtonWrapper>
-              <Button onClick={() => setPage(3)}>Previous</Button>
+              <Button onClick={() => setPage(3)}>
+                {t('createInvoice.previous')}
+              </Button>
               <Button onClick={handleSubmitInvoice}>
-                {edit ? 'Update invoice' : 'Create invoice'}
+                {edit
+                  ? t('createInvoice.pages.summary.update')
+                  : t('createInvoice.pages.summary.add')}
               </Button>
             </ButtonWrapper>
           </>

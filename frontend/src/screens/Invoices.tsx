@@ -14,10 +14,12 @@ import {
   DocumentReportIcon,
 } from '@heroicons/react/outline'
 import tw from 'twin.macro'
+import { useTranslation } from 'react-i18next'
 
 const Invoices = () => {
   const navigate = useNavigate()
 
+  const { t } = useTranslation()
   const { mutate } = useMutation((invoice_id: string) =>
     deleteInvoice(invoice_id)
   )
@@ -27,10 +29,9 @@ const Invoices = () => {
 
   return (
     <div className='container mx-auto'>
-      <PageHeader>Invoices</PageHeader>
-      <h1 className='text-2xl tracking-tighter'>Invoices</h1>
+      <PageHeader>{t('invoices.pageHeader')}</PageHeader>
       <SearchInput
-        label='Search invoices'
+        label={t('invoices.search')}
         name='filter'
         value={search.filter}
         onChange={(e) => search.setFilter(e.target.value)}
@@ -38,10 +39,12 @@ const Invoices = () => {
       <PageIndicator {...controls} />
       <div className='my-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-3 gap-x-3 font-light'>
         {isLoading ? (
-          <h1 className='text-xl tracking-tighter font-thiner'>Loading...</h1>
+          <h1 className='text-xl tracking-tighter font-thiner'>
+            {t('loading')}
+          </h1>
         ) : page.length === 0 ? (
           <h1 className='text-xl tracking-tighter font-thiner'>
-            No invoices found.
+            {t('invoices.notFound')}
           </h1>
         ) : (
           page.map((invoice: IInvoice) => (
@@ -52,14 +55,14 @@ const Invoices = () => {
               <div className='flex flex-col border-b-2'>
                 <FieldDescription>
                   <DocumentTextIcon className='w-5 h-5 text-gray-600 inline-block' />
-                  Name:
+                  {t('invoices.item.name')}
                 </FieldDescription>
                 <div className='text-xl'>{invoice.name}</div>
               </div>
               <div className='flex flex-col border-b-2'>
                 <FieldDescription>
                   <UserIcon className='w-5 h-5 text-gray-600 inline-block' />
-                  Contractor
+                  {t('invoices.item.contractor')}
                 </FieldDescription>
                 <span>{invoice.contractor.entityName}</span>
                 <span>
@@ -70,7 +73,7 @@ const Invoices = () => {
               <div className='flex flex-col border-b-2'>
                 <FieldDescription>
                   <DocumentReportIcon className='w-5 h-5 text-gray-600 inline-block' />
-                  Summary
+                  {t('invoices.item.summary')}
                 </FieldDescription>
                 <span>Invoice entries: Z</span>
                 <span>Net value: X</span>
@@ -79,7 +82,7 @@ const Invoices = () => {
               <div className='flex flex-col'>
                 <FieldDescription>
                   <CalendarIcon className='w-5 h-5 text-gray-600 inline-block' />
-                  Date
+                  {t('invoices.item.dates')}
                 </FieldDescription>
                 <span>Issue date: {invoice.issueDate}</span>
                 <span>Payment due: {invoice.paymentDue}</span>

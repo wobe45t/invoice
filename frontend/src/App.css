@@ -18,23 +18,6 @@ body,html {
 * {
     box-sizing: border-box;
 }
-.container {
-  /* display: grid;
-  min-height: 100vh;
-  min-width: 100vw;
-  max-width: 100vw;
-  overflow-x: hidden;
-  grid-template-areas:  "nav header"
-                        "nav main";
-
-  grid-template-rows: 5% auto;
-  grid-template-columns: 15% auto; */
-
-}
-.container .nav {
-  /* grid-area: nav; */
-
-}
 
 .container .header {
   /* grid-area: header; */
@@ -44,8 +27,4 @@ body,html {
   height: 100%;
   background-color: lightgrey;
   justify-content: space-between;
-}
-
-.container .main {
-  /* grid-area: main; */
 }

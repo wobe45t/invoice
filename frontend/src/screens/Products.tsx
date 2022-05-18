@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react'
-import Table from '../components/Table'
 import { IProduct } from '../interfaces'
 import { useNavigate } from 'react-router'
 import { Button, PageIndicator, usePagination } from '../components'
@@ -7,8 +5,7 @@ import { getProducts, deleteProduct } from '../actions/products'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { TrashIcon, PencilIcon } from '../components/styled/Icon'
 import { PageHeader } from '../components/styled/Header'
-import { SearchIcon } from '@heroicons/react/outline'
-import tw from 'twin.macro'
+import { PlusIcon } from '@heroicons/react/outline'
 import { Cell, HeaderCell } from '../components/styled/Table'
 import { SearchInput } from '../components/SearchInput'
 import { toast } from 'react-toastify'
@@ -24,9 +21,12 @@ const Products = () => {
   const { mutate } = useMutation(
     (product_id: string) => deleteProduct(product_id),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries('products')
-        toast.success(t('products.productDeleted'), { autoClose: 1000 }) //TODO could return object from DB and log the name
+        toast.success(t('products.delete.success'), { autoClose: 1000 })
+      },
+      onError: () => {
+        toast.error(t('products.delete.error'), { autoClose: 1000 })
       },
     }
   )
@@ -35,35 +35,41 @@ const Products = () => {
 
   return (
     <div className='container mx-auto'>
-      <PageHeader>{t('products.products')}</PageHeader>
+      <PageHeader>{t('products.header')}</PageHeader>
       <div className='flex flex-col gap-2'>
-        <Button onClick={() => navigate('/add-product')}>
-          {t('products.addNewProduct')}
-        </Button>
         <SearchInput
-          label={t('products.searchProducts')}
+          label={t('products.search')}
           name='filter'
           value={search.filter}
           onChange={(e) => search.setFilter(e.target.value)}
         />
-        <PageIndicator {...controls} />
+        <div className='flex flex-row justify-between w-full'>
+          <PageIndicator {...controls} />
+          <div className='h-3/5'>
+            <Button onClick={() => navigate('/add-product')}>
+              <PlusIcon className='w-5 h-5 mr-2' />
+              <div>{t('products.add')}</div>
+            </Button>
+          </div>
+        </div>
 
         {isLoading ? (
           <h1 className='text-xl tracking-tighter font-thiner'>
-            {t('products.loading')}
+            {t('loading')}
           </h1>
         ) : page.length === 0 ? (
           <h1 className='text-xl tracking-tighter font-thiner'>
-            {t('products.noProductsFound')}
+            {t('products.alerts.notFound')}
           </h1>
         ) : (
           <table className='w-full'>
-            <thead>
+            <thead className='bg-gray-100'>
               <tr>
-                <HeaderCell>{t('products.productsTable.name')}</HeaderCell>
-                <HeaderCell>{t('products.productsTable.price')}</HeaderCell>
-                <HeaderCell>{t('products.productsTable.unit')}</HeaderCell>
-                <HeaderCell>{t('products.productsTable.tax')}</HeaderCell>
+                <HeaderCell>{t('products.table.name')}</HeaderCell>
+                <HeaderCell>{t('products.table.price')}</HeaderCell>
+                <HeaderCell>{t('products.table.unit')}</HeaderCell>
+                <HeaderCell>{t('products.table.tax')}</HeaderCell>
+                <HeaderCell />
               </tr>
             </thead>
             <tbody>
@@ -73,7 +79,7 @@ const Products = () => {
                   <Cell>{product.price}</Cell>
                   <Cell>{product.unit}</Cell>
                   <Cell>{product.tax}</Cell>
-                  <td className='w-1'>
+                  <Cell className='w-1'>
                     <div className='ml-2 flex flex-row gap-2 justify-end'>
                       <PencilIcon
                         onClick={() => {
@@ -82,7 +88,7 @@ const Products = () => {
                       />
                       <TrashIcon onClick={() => mutate(product._id!)} />
                     </div>
-                  </td>
+                  </Cell>
                 </tr>
               ))}
             </tbody>

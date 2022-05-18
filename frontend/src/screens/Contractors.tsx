@@ -4,19 +4,16 @@ import { Button } from '../components'
 import { deleteContractor } from '../actions/contractor'
 import { PlusIcon, MailIcon, PhoneIcon } from '@heroicons/react/outline'
 import { TrashIcon, PencilIcon } from '../components/styled/Icon'
-import tw from 'twin.macro'
 import { usePagination, PageIndicator } from '../components'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { getContractors } from '../actions/contractor'
-import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { PageHeader } from '../components/styled/Header'
 import { SearchInput } from '../components/SearchInput'
 import { Cell, HeaderCell } from '../components/styled/Table'
 import { useTranslation } from 'react-i18next'
+import tw from 'twin.macro'
 
-// const Cell = tw.td`border px-3 py-2`
-// const HeaderCell = tw.th`border px-3 py-2`
 const HiddenHeaderCell = tw(HeaderCell)`hidden md:table-cell`
 const HiddenCell = tw(Cell)`hidden md:table-cell`
 
@@ -35,47 +32,48 @@ const Contractors = () => {
 
   const {
     mutate: deleteContractorMutate,
-    isSuccess: deleteSuccess,
-    isError: deleteError,
   } = useMutation((contractor_id: string) => deleteContractor(contractor_id), {
     onSuccess: () => {
       queryClient.invalidateQueries('contractors')
-      toast.success(t('contractors.deleteSuccess'), { autoClose: 1000 })
+      toast.success(t('contractors.alerts.delete.success'), { autoClose: 1000 })
     },
     onError: () => {
-      toast.success(t('contractors.deleteError'), { autoClose: 1000 })
+      toast.error(t('contractors.alerts.delete.error'), { autoClose: 1000 })
     },
   })
 
   return (
     <div className='container mx-auto'>
-      <PageHeader>{t('contractors.pageHeader')}</PageHeader>
+      <PageHeader>{t('contractors.header')}</PageHeader>
       <div className='w-full flex flex-col'>
-        <Button
-          onClick={() => {
-            navigate('/add-contractor')
-          }}
-        >
-          <PlusIcon className='w-5 h-5 mr-2' />
-          <div>{t('contractors.add')}</div>
-        </Button>
-
         <SearchInput
           label={t('contractors.search')}
           name='filter'
           value={search.filter}
           onChange={(e) => search.setFilter(e.target.value)}
         />
-        <PageIndicator {...controls} />
-        {/* medium screen > display table */}
+        <div className='flex flex-row justify-between w-full'>
+          <PageIndicator {...controls} />
+          <div className='h-3/5'>
+            <Button
+              onClick={() => {
+                navigate('/add-contractor')
+              }}
+            >
+              <PlusIcon className='w-5 h-5 mr-2' />
+              <div>{t('contractors.add')}</div>
+            </Button>
+          </div>
+        </div>
 
+        {/* medium screen > display table */}
         {isLoading ? (
           <h1 className='text-xl tracking-tighter font-thiner'>
             {t('loading')}
           </h1>
         ) : page.length === 0 ? (
           <h1 className='text-xl tracking-tighter font-thiner'>
-            {t('contractors.notFound')}
+            {t('contractors.alerts.notFound')}
           </h1>
         ) : (
           <table className='w-full hidden sm:table'>

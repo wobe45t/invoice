@@ -8,9 +8,11 @@ import { SubmitButton } from '../components/SubmitButton'
 import { login, getStorageUser } from '../actions/users'
 import { UserContext } from '../context/userContext'
 import { useMutation } from 'react-query'
+import { useTranslation } from 'react-i18next'
 
 const Login = () => {
   const navigate = useNavigate()
+  const {t} = useTranslation()
 
   const {
     register,
@@ -23,16 +25,13 @@ const Login = () => {
 
   const {
     mutate: loginMutate,
-    isLoading,
-    isSuccess,
-    isError,
   } = useMutation((loginData: Credentials) => login(loginData), {
     onSuccess: (data) => {
       localStorage.setItem('token', data.token)
       delete data.token
       setUser(data)
-      toast.success('Logged in', { autoClose: 500, hideProgressBar: true })
-      navigate('/')
+      toast.success(t('login.alerts.success'), { autoClose: 500, hideProgressBar: true })
+      navigate('/invoices')
     },
     onError: (error: any) => {
       toast.error(error.response.data.message, { autoClose: 1000 })
@@ -49,7 +48,7 @@ const Login = () => {
       <div className='shadow-md p-3 border rounded-md flex flex-col items-center'>
         <div className='flex flex-col w-3/4 my-2 gap-5'>
           <span className='text-4xl tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-pink-400 to-blue-600'>
-            Login
+            {t('login.header')}
           </span>
           <form
             className='flex flex-col gap-2'
@@ -58,32 +57,32 @@ const Login = () => {
             })}
           >
             <InputField
-              label='Email'
+              label={t('login.fields.email')}
               {...register('email', {
-                required: 'Field is required',
+                required: t('required'),
                 pattern: {
                   value:
                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: 'Please enter a valid email',
+                  message: t('login.errors.email')
                 },
               })}
               error={errors?.email}
             />
 
             <InputField
-              label='Password'
+              label={t('login.fields.password')}
               type='password'
-              {...register('password', { required: 'Field is required' })}
+              {...register('password', { required: t('required') })}
               error={errors?.password}
             />
 
-            <SubmitButton>Login</SubmitButton>
+            <SubmitButton>{t('login.header')}</SubmitButton>
           </form>
           <span
             onClick={() => navigate('/signup')}
             className='font-light tracking-tighter cursor-pointer hover:text-blue-700 text-blue-900'
           >
-            Don't have an account? Signup!
+            {t('login.prompt')}
           </span>
           <button
             className='border rounded-sm border-slate-500 p-3 uppercase cursor-pointer'

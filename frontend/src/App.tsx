@@ -1,5 +1,4 @@
 import { Suspense, lazy } from 'react'
-import Debug from './screens/Debug'
 import { createBrowserHistory } from 'history'
 import {
   unstable_HistoryRouter as Router,
@@ -41,10 +40,6 @@ const ContractorsWithSuspense = withSuspense(
   lazy(() => import('./screens/Contractors')),
   <div>Loading...</div>
 )
-const AddProfileWithSuspense = withSuspense(
-  lazy(() => import('./screens/AddProfile')),
-  <div>Loading...</div>
-)
 const CreateInvoiceWithSuspense = withSuspense(
   lazy(() => import('./screens/CreateInvoice')),
   <div>Loading...</div>
@@ -74,29 +69,22 @@ const SignupWithSuspense = withSuspense(
   <div>Loading...</div>
 )
 
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .init({
-    // the translations
-    // (tip move them in a JSON file and import them,
-    // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
-    resources,
-    lng: 'pl', // if you're using a language detector, do not define the lng option
-    fallbackLng: 'en',
+i18n.use(initReactI18next).init({
+  resources,
+  lng: 'pl',
+  fallbackLng: 'en',
 
-    interpolation: {
-      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-    },
-  })
+  interpolation: {
+    escapeValue: false,
+  },
+})
 
 export const history = createBrowserHistory()
-// Create a client
 const queryClient = new QueryClient()
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <> */}
       <UserProvider>
         <Router history={history}>
           <div className='flex flex-row'>
@@ -110,17 +98,12 @@ function App() {
                   <Route index element={<HomeWithSuspense />} />
                   <Route path='login' element={<LoginWithSuspense />} />
                   <Route path='signup' element={<SignupWithSuspense />} />
-                  <Route path='debug' element={<Debug />} />
                   <Route path='products' element={<ProductsWithSuspense />} />
                   <Route
                     path='add-product'
                     element={<AddProductWithSuspense />}
                   />
                   <Route path='profile' element={<ProfileWithSuspense />} />
-                  <Route
-                    path='add-profile'
-                    element={<AddProfileWithSuspense />}
-                  />
                   <Route
                     path='add-contractor'
                     element={<AddContractorWithSuspense />}
@@ -140,11 +123,9 @@ function App() {
             </main>
           </div>
         </Router>
-
         <ReactQueryDevtools initialIsOpen={false} />
       </UserProvider>
     </QueryClientProvider>
-    // </>
   )
 }
 

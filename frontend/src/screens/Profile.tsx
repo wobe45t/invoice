@@ -10,10 +10,13 @@ import { useMutation } from 'react-query'
 import { updateProfile } from '../actions/users'
 import { PageHeader } from '../components/styled/Header'
 import { UserContext } from '../context/userContext'
+import { useTranslation } from 'react-i18next'
 
 const Profile = () => {
   const navigate = useNavigate()
   const { user, setUser } = useContext(UserContext)
+
+  const { t } = useTranslation()
 
   const {
     register,
@@ -27,7 +30,7 @@ const Profile = () => {
     {
       onSuccess: (data) => {
         setUser((prevState: any) => ({ ...prevState, profile: data.profile }))
-        toast.success('Profile updated', { autoClose: 1000 })
+        toast.success(t('profile.alerts.update.success'), { autoClose: 1000 })
       },
       onError: (error: any) => {
         toast.error(error.response.data.message, { autoClose: 1000 })
@@ -50,107 +53,107 @@ const Profile = () => {
 
   return (
     <div className='container mx-auto'>
-      <PageHeader>Profile</PageHeader>
+      <PageHeader>{t('profile.header')}</PageHeader>
       <span
         onClick={() => setEdit((prevState) => !prevState)}
         className='my-2 text-lg font-light cursor-pointer'
       >
-        {edit ? 'Disable' : 'Enable'} edit
+        {edit ? t('profile.edit.disable') : t('profile.edit.enable')}
       </span>
       <form onSubmit={handleSubmit((data) => handleSubmitContractor(data))}>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-2'>
-          <Fieldset label='Overall info'>
+          <Fieldset label={t('addContractor.fieldsets.general')}>
             <InputField
               disabled={!edit}
-              label='Name'
-              {...register('name', { required: 'Field is required' })}
+              label={t('addContractor.fields.name')}
+              {...register('name', { required: t('required') })}
               error={errors?.name}
             />
             <InputField
               disabled={!edit}
-              label='Surname'
-              {...register('surname', { required: 'Field is required' })}
+              label={t('addContractor.fields.surname')}
+              {...register('surname', { required: t('required') })}
               error={errors?.surname}
             />
             <InputField
               disabled={!edit}
-              label='Entity name'
-              {...register('entityName', { required: 'Field is required' })}
+              label={t('addContractor.fields.entityName')}
+              {...register('entityName', { required: t('required') })}
               error={errors?.entityName}
             />
             <InputField
               disabled={!edit}
-              label='NIP'
+              label={t('addContractor.fields.nip')}
               {...register('nip', {
-                required: 'Field is required',
+                required: t('required'),
                 minLength: {
                   value: 10,
-                  message: 'NIP length has to be equal to 10',
+                  message: t('addContractor.errors.nipLength'),
                 },
                 maxLength: {
                   value: 10,
-                  message: 'NIP length has to be equal to 10',
+                  message: t('addContractor.errors.nipLength'),
                 },
                 pattern: {
                   value: /[0-9]+$/,
-                  message: 'NIP has to be digit only',
+                  message: t('addContractor.errors.nipDigit'),
                 },
               })}
               error={errors?.nip}
             />
           </Fieldset>
-          <Fieldset label='Contact info'>
+          <Fieldset label={t('addContractor.fieldsets.contact')}>
             <InputField
               disabled={!edit}
-              label='Phone number'
-              {...register('phoneNumber', { required: 'Field is required' })}
+              label={t('addContractor.fields.phoneNumber')}
+              {...register('phoneNumber', { required: t('required') })}
               error={errors?.phoneNumber}
             />
             <InputField
               disabled={!edit}
-              label='Email'
-              {...register('email', { required: 'Field is required' })}
+              label={t('addContractor.fields.email')}
+              {...register('email', { required: t('required') })}
               error={errors?.email}
             />
           </Fieldset>
-          <Fieldset label='Address info'>
+          <Fieldset label={t('addContractor.fieldsets.address')}>
             <InputField
               disabled={!edit}
-              label='Street'
-              {...register('street', { required: 'Field is required' })}
+              label={t('addContractor.fields.street')}
+              {...register('street', { required: t('required') })}
               error={errors?.street}
             />
             <InputField
               disabled={!edit}
-              label='Postal code'
-              {...register('postalCode', { required: 'Field is required' })}
+              label={t('addContractor.fields.postalCode')}
+              {...register('postalCode', { required: t('required') })}
               error={errors?.postalCode}
             />
             <InputField
               disabled={!edit}
-              label='City'
-              {...register('city', { required: 'Field is required' })}
+              label={t('addContractor.fields.city')}
+              {...register('city', { required: t('required') })}
               error={errors?.city}
             />
           </Fieldset>
-          <Fieldset label='Bank info'>
+          <Fieldset label={t('addContractor.fieldsets.bank')}>
             <InputField
               disabled={!edit}
-              label='Bank account number'
+              label={t('addContractor.fields.bankAccountNumber')}
               {...register('bankAccountNumber', {
-                required: 'Field is required',
+                required: t('required'),
               })}
               error={errors?.bankAccountNumber}
             />
             <InputField
               disabled={!edit}
-              label='Bank name'
-              {...register('bankName', { required: 'Field is required' })}
+              label={t('addContractor.fields.bankName')}
+              {...register('bankName', { required: t('required') })}
               error={errors?.bankName}
             />
           </Fieldset>
         </div>
-        <SubmitButton className='mt-3'>Update profile</SubmitButton>
+        <SubmitButton className='mt-3'>{t('profile.update')}</SubmitButton>
       </form>
       <div className='mt-5' />
     </div>

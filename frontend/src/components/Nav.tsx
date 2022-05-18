@@ -15,6 +15,7 @@ import {
 } from '@heroicons/react/outline'
 import { classNames } from '../utils'
 import { logout } from '../actions/users'
+import { useTranslation } from 'react-i18next'
 
 const NavItem = (props: {
   to?: string
@@ -84,71 +85,72 @@ export const Nav = () => {
     logout()
     navigate('/login')
   }
+  const { t } = useTranslation()
 
   return (
     <div className='w-auto p-3 flex flex-col items-center bg-gray-800'>
       <NavItem
         icon={<MenuIcon className='w-5 h-5' />}
-        onClick={() => setExpandMenu(!expandMenu)}
-        text='Expand'
+        // onClick={() => setExpandMenu(!expandMenu)}
+        text={t('nav.expand')}
         expand={expandMenu}
       />
-      <NavItem
+      {/* <NavItem
         icon={<HomeIcon className='w-5 h-5' />}
         to='/'
-        text='Home'
+        text={t('nav.home')}
+        expand={expandMenu}
+      /> */}
+
+      <NavItem
+        icon={<NewspaperIcon className='w-5 h-5' />}
+        to='/invoices'
+        text={t('nav.invoices')}
         expand={expandMenu}
       />
       <NavItem
         icon={<PlusIcon className='w-5 h-5' />}
         to='/create-invoice'
-        text='Create invoice'
-        expand={expandMenu}
-      />
-
-      <NavItem
-        icon={<NewspaperIcon className='w-5 h-5' />}
-        to='/invoices'
-        text='Invoices'
+        text={t('nav.createInvoice')}
         expand={expandMenu}
       />
 
       <NavItem
         icon={<ChipIcon className='w-5 h-5' />}
         to='/products'
-        text='Products'
+        text={t('nav.products')}
         expand={expandMenu}
       />
 
       <NavItem
         icon={<UsersIcon className='w-5 h-5' />}
         to='/contractors'
-        text='Contractors'
+        text={t('nav.contractors')}
         expand={expandMenu}
       />
       <div className='flex-1' />
-      <NavItem
+      {/* <NavItem
         icon={<AcademicCapIcon className='w-5 h-5' />}
         to='/debug'
-        text='Debug'
+        text={t('nav.debug')}
         expand={expandMenu}
-      />
+      /> */}
       <NavItem
         icon={<UserIcon className='w-5 h-5' />}
         to='/profile'
-        text='Profile'
+        text={t('nav.profile')}
         expand={expandMenu}
       />
       <NavItem
         icon={<CogIcon className='w-5 h-5' />}
         to='/settings'
-        text='Settings'
+        text={t('nav.settings')}
         expand={expandMenu}
       />
       <NavItem
         onClick={handleLogout}
         icon={<LogoutIcon className='w-5 h-5 ' />}
-        text='Logout'
+        text={t('nav.logout')}
         expand={expandMenu}
       />
     </div>

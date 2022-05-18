@@ -12,6 +12,7 @@ interface IProps {
  *** @param value value state for input element
  *** @param name name for input element
  *** @param onChange event handler for input element
+ *** @param label 
  **/
 export const SearchInput = (props: IProps) => {
   const { name, value, onChange, label } = props
