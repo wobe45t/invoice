@@ -92,6 +92,8 @@ export const resources = {
         bankNumber: 'Bank account number',
         bankName: 'Bank name',
         entityName: 'Entity name',
+        address: 'Address',
+        contact: 'Contact',
         table: {
           name: 'Name',
           address: 'Address',
@@ -333,6 +335,8 @@ export const resources = {
         bankNumber: 'Numer konta bankowego',
         bankName: 'Nazwa banku',
         entityName: 'Nazwa jednostki',
+        address: 'Adres',
+        contact: 'Kontakt',
         table: {
           name: 'Nazwa',
           address: 'Adres',

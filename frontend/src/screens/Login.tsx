@@ -1,11 +1,11 @@
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { InputField } from '../components/InputField'
 import { Credentials } from '../interfaces/user'
 import { SubmitButton } from '../components/SubmitButton'
-import { login, getStorageUser } from '../actions/users'
+import { login } from '../actions/users'
 import { UserContext } from '../context/userContext'
 import { useMutation } from 'react-query'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +17,6 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<Credentials>()
 
@@ -37,11 +36,6 @@ const Login = () => {
       toast.error(error.response.data.message, { autoClose: 1000 })
     },
   })
-
-  const fillDebug = () => {
-    setValue('email', 'michu@michu.com')
-    setValue('password', 'kox')
-  }
 
   return (
     <div className='w-full flex min-h-screen items-center justify-center'>

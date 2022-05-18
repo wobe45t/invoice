@@ -6,7 +6,7 @@ import {
   ChevronDoubleRightIcon,
 } from '@heroicons/react/solid'
 import { debounced } from '../utils/debounce'
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 interface PaginationReturn {
   controls: {
@@ -49,8 +49,8 @@ export const usePagination = (
   const [debouncedFilter, setDebouncedFilter] = useState<string>('')
 
   useEffect(() => {
-    if(collection) {
-      setData(collection) 
+    if (collection) {
+      setData(collection)
     }
   }, [collection])
 
@@ -60,14 +60,9 @@ export const usePagination = (
   )
 
   const maxPage = React.useMemo(
-    () => Math.ceil(data.length / (itemsPerPage)),
+    () => Math.ceil(data.length / itemsPerPage),
     [data, itemsPerPage]
   )
-
-  useEffect(() => {
-    // setFilteredData(data)
-    console.log('Data changed')
-  }, [data])
 
   useEffect(() => {
     const begin = (currentPage - 1) * itemsPerPage
@@ -83,9 +78,9 @@ export const usePagination = (
   }, [filter, debouncedInput])
 
   useEffect(() => {
-    if (data) {
+    if (data.length !== 0) {
       const value = filter.toLowerCase()
-      const filtered = data.filter((d) =>
+      const filtered = data?.filter((d) =>
         Object.entries(d).some((entry) => {
           return String(entry[1]).toLowerCase().includes(value)
         })
@@ -122,7 +117,7 @@ export const usePagination = (
       canPrevious,
     },
     page,
-    setData
+    setData,
   }
 }
 
@@ -144,7 +139,7 @@ export const PageIndicator = (props: {
     maxPage,
     currentPage,
   } = props
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   return (
     <div className='flex flex-col gap-1'>
       <div className='flex flex-row gap-2'>

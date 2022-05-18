@@ -123,7 +123,7 @@ function App() {
             </main>
           </div>
         </Router>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </UserProvider>
     </QueryClientProvider>
   )
