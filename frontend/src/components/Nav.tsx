@@ -16,6 +16,7 @@ import {
 import { classNames } from '../utils'
 import { logout } from '../actions/users'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
 
 const NavItem = (props: {
   to?: string
@@ -80,9 +81,11 @@ const Tooltip = (props: any) => {
 export const Nav = () => {
   const navigate = useNavigate()
   const [expandMenu, setExpandMenu] = useState<boolean>(false)
+  const queryClient = useQueryClient()
 
   const handleLogout = () => {
     logout()
+    queryClient.clear()
     navigate('/login')
   }
   const { t } = useTranslation()

@@ -141,7 +141,6 @@ const CreateInvoice = () => {
     register: registerInvoiceForm,
     handleSubmit: handleSubmitInvoiceForm,
     setValue: setValueInvoiceForm,
-    getFieldState: getFieldStateInvoiceForm,
     formState: { errors: errorsInvoiceForm },
   } = useForm()
 
@@ -149,7 +148,6 @@ const CreateInvoice = () => {
     register: registerContractorForm,
     handleSubmit: handleSubmitContractorForm,
     setValue: setValueContractorForm,
-    getFieldState: getFieldStateContractorForm,
     formState: { errors: errorsContractorForm },
   } = useForm()
 
@@ -226,14 +224,6 @@ const CreateInvoice = () => {
     }
   }
 
-  const fillDebug = () => {
-    setValueInvoiceForm('name', 'invoice')
-    setValueInvoiceForm('issuePlace', 'Zamch')
-    setValueInvoiceForm('issueDate', '2022-02-02')
-    setValueInvoiceForm('sellDate', '2022-02-02')
-    setValueInvoiceForm('paymentType', 'bank transfer')
-    setValueInvoiceForm('paymentDue', '2022-02-02')
-  }
   const handleSubmitInvoice = () => {
     const invoice = {
       ...invoiceForm,
@@ -248,8 +238,6 @@ const CreateInvoice = () => {
     if (!valid) return
     edit ? updateInvoiceMutate(invoice) : addInvoiceMutate(invoice)
   }
-
-  const [editContractor, setEditContractor] = useState(false)
 
   const handleAddContractor = () => {
     setShowContractorModal(true)
@@ -293,6 +281,24 @@ const CreateInvoice = () => {
         break
     }
   }, [page, t])
+
+  if (!user?.profile) {
+    return (
+      <div className='container mx-auto'>
+        <div className='flex flex-col gap-2'>
+          <span className='text-lg font-light'>
+            {t('createInvoice.profile.info')}
+          </span>
+          <span
+            onClick={() => navigate('/profile')}
+            className='text-xl font-light text-blue-600 cursor-pointer'
+          >
+            {t('createInvoice.profile.link')}
+          </span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='container mx-auto'>

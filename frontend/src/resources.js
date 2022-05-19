@@ -125,6 +125,10 @@ export const resources = {
         logout: 'Logout',
       },
       createInvoice: {
+        profile: {
+          info: 'Update user profile to be able to create invoices.',
+          link: 'Go to user profile'
+        },
         step: 'Step',
         next: 'Next',
         previous: 'Previous',
@@ -368,6 +372,10 @@ export const resources = {
         logout: 'Wyloguj',
       },
       createInvoice: {
+        profile: {
+          info: 'Zaktualizuj profil użytkownika aby umożliwić tworzenie faktur.',
+          link: 'Przejdź do profilu użytkownika'
+        },
         step: 'Krok',
         next: 'Kontynuuj',
         previous: 'Powrót',

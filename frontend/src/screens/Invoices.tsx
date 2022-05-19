@@ -24,7 +24,10 @@ const Invoices = () => {
     deleteInvoice(invoice_id)
   )
 
-  const { data: invoices, isLoading } = useQuery('invoices', getInvoices)
+  const {
+    data: invoices,
+    isLoading,
+  } = useQuery('invoices', getInvoices)
   const { page, controls, search } = usePagination(10, invoices)
 
   return (

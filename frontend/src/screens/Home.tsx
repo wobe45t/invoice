@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router'
 const Home = () => {
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   navigate('/invoices')
-  // }, [navigate])
+  useEffect(() => {
+    navigate('/invoices')
+  }, [navigate])
 
   return <></>
 }
