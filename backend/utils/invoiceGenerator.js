@@ -54,14 +54,14 @@ const productTableHeaders = () => {
 
 const productTableRow = (id, product) => {
   const netValue = product.quantity * product.price
-  const taxValue = netValue * product.tax
+  const taxValue = netValue * (parseFloat(product.tax) / 100)
   return [
     {text: id, alignment: 'center'},
     {text: product.name, alignment: 'left'},
     {text: product.quantity, alignment: 'right'},
     {text: format(product.price.toFixed(2)), alignment: 'right'},
     {text: format(netValue.toFixed(2)), alignment: 'right'},
-    {text: `${product.tax * 100}%`, alignment: 'right'},
+    {text: `${product.tax}%`, alignment: 'right'},
     {text: format(taxValue.toFixed(2)), alignment: 'right'},
     {text: format((netValue + taxValue).toFixed(2)), alignment: 'right'},
   ]
@@ -73,7 +73,7 @@ const generatePdf = (invoice) => {
     .reduce((sum, product) => sum + product)
   const taxValueSum = invoice.products
     .map(
-      (product) => product.quantity * product.price * Number(product.tax)
+      (product) => product.quantity * product.price * parseFloat(product.tax) / 100
     )
     .reduce((sum, product) => sum + product)
 

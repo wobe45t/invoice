@@ -51,6 +51,8 @@ export const usePagination = (
   useEffect(() => {
     if (collection) {
       setData(collection)
+    } else {
+      setData([])
     }
   }, [collection])
 
@@ -78,15 +80,14 @@ export const usePagination = (
   }, [filter, debouncedInput])
 
   useEffect(() => {
-    if (data.length !== 0) {
-      const value = filter.toLowerCase()
-      const filtered = data?.filter((d) =>
-        Object.entries(d).some((entry) => {
-          return String(entry[1]).toLowerCase().includes(value)
-        })
-      )
-      setFilteredData(filtered)
-    }
+    if (!data) return
+    const value = filter.toLowerCase()
+    const filtered = data?.filter((d) =>
+      Object.entries(d).some((entry) => {
+        return String(entry[1]).toLowerCase().includes(value)
+      })
+    )
+    setFilteredData(filtered)
   }, [debouncedFilter, data, filter])
 
   const goNext = () => {

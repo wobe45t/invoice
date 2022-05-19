@@ -105,6 +105,12 @@ export const resources = {
         pageHeader: 'Invoices',
         search: 'Search invoices',
         notFound: 'Invoices not found',
+        alerts: {
+          delete: {
+            success: 'Invoice deleted',
+            error: "Couldn't delete invoice'",
+          },
+        },
         item: {
           name: 'Name',
           summary: 'Summary',
@@ -127,7 +133,17 @@ export const resources = {
       createInvoice: {
         profile: {
           info: 'Update user profile to be able to create invoices.',
-          link: 'Go to user profile'
+          link: 'Go to user profile',
+        },
+        alerts: {
+          add: {
+            success: 'Invoice created',
+            error: "Couldn't create invoice",
+          },
+          update: {
+            success: 'Invoice updated',
+            error: "Couldn't update invoice",
+          },
         },
         step: 'Step',
         next: 'Next',
@@ -309,7 +325,7 @@ export const resources = {
       products: {
         header: 'Produkty',
         add: 'Dodaj nowy produkt',
-        search: 'Szukaj produktu',
+        search: 'Szukaj produktów',
         alerts: {
           notFound: 'Nie znaleziono produktów',
           delete: {
@@ -351,6 +367,12 @@ export const resources = {
       invoices: {
         pageHeader: 'Faktury',
         search: 'Szukaj faktur',
+        alerts: {
+          delete: {
+            success: 'Faktura usunięta',
+            error: "Nie udało się usunąć faktury'",
+          },
+        },
         notFound: 'Nie znaleziono faktur',
         item: {
           name: 'Nazwa',
@@ -374,7 +396,17 @@ export const resources = {
       createInvoice: {
         profile: {
           info: 'Zaktualizuj profil użytkownika aby umożliwić tworzenie faktur.',
-          link: 'Przejdź do profilu użytkownika'
+          link: 'Przejdź do profilu użytkownika',
+        },
+        alerts: {
+          add: {
+            success: 'Faktura utworzona',
+            error: 'Tworzenie faktury nie powiodło się',
+          },
+          update: {
+            success: 'Faktura zaktualizowana',
+            error: 'Aktualizacja faktury nie powiodła się',
+          },
         },
         step: 'Krok',
         next: 'Kontynuuj',

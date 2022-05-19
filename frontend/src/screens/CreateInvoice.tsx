@@ -115,11 +115,11 @@ const CreateInvoice = () => {
     (invoiceData: IInvoice) => addInvoice(invoiceData),
     {
       onSuccess: () => {
-        toast.success(t('add.success'), { autoClose: 1000 })
+        toast.success(t('createInvoice.alerts.add.success'), { autoClose: 1000 })
         navigate('/invoices')
       },
       onError: () => {
-        toast.error(t('add.error'), { autoClose: 1000 })
+        toast.error(t('createInvoice.alerts.add.error'), { autoClose: 1000 })
       },
     }
   )
@@ -128,11 +128,11 @@ const CreateInvoice = () => {
     (invoiceData: IInvoice) => updateInvoice(invoiceData),
     {
       onSuccess: () => {
-        toast.success(t('update.success'), { autoClose: 1000 })
+        toast.success(t('createInvoice.alerts.update.success'), { autoClose: 1000 })
         navigate('/invoices')
       },
       onError: () => {
-        toast.error('update.error', { autoClose: 1000 })
+        toast.error('createInvoice.alerts.update.error', { autoClose: 1000 })
       },
     }
   )
@@ -166,8 +166,8 @@ const CreateInvoice = () => {
         invoiceProducts.forEach((product: any) => {
           if (parseFloat(val) !== 0) {
             let grossValue = parseFloat(product.price) * parseFloat(val)
-            grossSum += grossValue
-            let netValue = grossValue - parseFloat(product.tax) * grossValue
+            grossSum += grossValue 
+            let netValue = grossValue - (parseFloat(product.tax) / 100) * grossValue
             netSum += netValue
           }
         })
@@ -466,7 +466,7 @@ const CreateInvoice = () => {
                   />
                   <InputField
                     label={t('createInvoice.pages.contractor.fields.bankName')}
-                    {...registerContractorForm('bankName', {
+                   {...registerContractorForm('bankName', {
                       required: t('required'),
                     })}
                     error={errorsContractorForm?.bankName}
@@ -522,7 +522,7 @@ const CreateInvoice = () => {
                         {t('createInvoice.pages.products.table.quantity')}
                       </HeaderCell>
                       <HeaderCell>
-                        {t('createInvoice.pages.products.table.tax')}
+                        {t('createInvoice.pages.products.table.tax')} [%]
                       </HeaderCell>
                       <HeaderCell>
                         {t('createInvoice.pages.products.table.unit')}
@@ -727,7 +727,7 @@ const CreateInvoice = () => {
                         {t('createInvoice.pages.products.table.unit')}
                       </HeaderCell>
                       <HeaderCell>
-                        {t('createInvoice.pages.products.table.tax')}
+                        {t('createInvoice.pages.products.table.tax')} [%]
                       </HeaderCell>
                     </tr>
                   </thead>
@@ -738,7 +738,7 @@ const CreateInvoice = () => {
                         <Cell>{product.price}</Cell>
                         <Cell>{product.quantity}</Cell>
                         <Cell>{product.unit}</Cell>
-                        <Cell>{product.tax * 100}%</Cell>
+                        <Cell>{product.tax}%</Cell>
                       </tr>
                     ))}
                   </tbody>

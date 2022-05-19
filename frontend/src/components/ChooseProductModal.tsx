@@ -64,42 +64,14 @@ export const ChooseProductModal = (props: Props) => {
                   <Cell>{product.name}</Cell>
                   <Cell>{product.price}</Cell>
                   <Cell>{product.unit}</Cell>
-                  <Cell>{product.tax}</Cell>
+                  <Cell>{product.tax}%</Cell>
                 </tr>
               ))}
             </tbody>
           </table>
-          // page?.map((product: any) => (
-          //   <Product key={product._id} product={product} onSelect={onSelect} />
-          // ))
         )}
       </div>
       {page.length !== 0 && <PageIndicator {...controls} />}
     </Modal>
-  )
-}
-
-const Product = (props: { product: IProduct; onSelect: Function }) => {
-  const { product, onSelect } = props
-  return (
-    <div
-      onClick={() => onSelect(product)}
-      className='p-2 w-full border rounded-md flex flex-col gap-2 shadow transition cursor-pointer even:bg-gray-100 hover:bg-slate-100'
-    >
-      <div className='flex flex-row gap-5'>
-        <div className='flex flex-col gap-2'>
-          <span>Name</span>
-          <span>Price</span>
-          <span>tax</span>
-          <span>unit</span>
-        </div>
-        <div className='flex flex-col gap-2'>
-          <span>{product.name}</span>
-          <span>{product.price}</span>
-          <span>{product.tax}</span>
-          <span>{product.unit}</span>
-        </div>
-      </div>
-    </div>
   )
 }

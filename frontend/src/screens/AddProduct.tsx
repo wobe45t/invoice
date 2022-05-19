@@ -64,7 +64,7 @@ const AddProduct = () => {
     }
   }, [state, setValue])
 
-  const handleSubmitForm = (productData: IProduct) =>
+  const handleSubmitForm = (productData: IProduct) => 
     edit ? updateProductMutate(productData) : addProductMutate(productData)
 
   return (
@@ -89,7 +89,7 @@ const AddProduct = () => {
               error={errors?.price}
             />
             <InputField
-              label={t('addProduct.fields.tax')}
+              label={`${t('addProduct.fields.tax')}%`}
               {...register('tax', {
                 required: t('required'),
               })}

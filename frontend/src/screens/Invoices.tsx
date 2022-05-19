@@ -2,7 +2,7 @@ import { IInvoice } from '../interfaces'
 import { useNavigate } from 'react-router'
 import { usePagination, PageIndicator } from '../components'
 import { getInvoices, deleteInvoice } from '../actions/invoice'
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useQueryClient, useMutation } from 'react-query'
 import { TrashIcon, DownloadIcon, PencilIcon } from '../components/styled/Icon'
 import { PageHeader } from '../components/styled/Header'
 import { downloadInvoice } from '../actions/invoice'
@@ -15,19 +15,28 @@ import {
 } from '@heroicons/react/outline'
 import tw from 'twin.macro'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 const Invoices = () => {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
-  const { mutate } = useMutation((invoice_id: string) =>
-    deleteInvoice(invoice_id)
+  const queryClient = useQueryClient()
+
+  const { mutate } = useMutation(
+    (invoice_id: string) => deleteInvoice(invoice_id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('invoices')
+        toast.success(t('invoices.alerts.delete.success'), { autoClose: 1000 })
+      },
+      onError: () => {
+        toast.error(t('invoices.alerts.delete.error'), { autoClose: 1000 })
+      },
+    }
   )
 
-  const {
-    data: invoices,
-    isLoading,
-  } = useQuery('invoices', getInvoices)
+  const { data: invoices, isLoading } = useQuery('invoices', getInvoices)
   const { page, controls, search } = usePagination(10, invoices)
 
   return (

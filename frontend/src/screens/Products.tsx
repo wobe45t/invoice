@@ -10,6 +10,7 @@ import { Cell, HeaderCell } from '../components/styled/Table'
 import { SearchInput } from '../components/SearchInput'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const Products = () => {
   const navigate = useNavigate()
@@ -78,7 +79,7 @@ const Products = () => {
                   <Cell>{product.name}</Cell>
                   <Cell>{product.price}</Cell>
                   <Cell>{product.unit}</Cell>
-                  <Cell>{product.tax}</Cell>
+                  <Cell>{product.tax}%</Cell>
                   <Cell className='w-1'>
                     <div className='ml-2 flex flex-row gap-2 justify-end'>
                       <PencilIcon
